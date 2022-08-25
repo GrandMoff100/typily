@@ -1,5 +1,6 @@
-import astpretty
 import ast
+
+import astpretty
 import click
 
 from typily.validator import ModuleValidator

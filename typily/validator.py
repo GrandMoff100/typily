@@ -1,3 +1,4 @@
+"""Module for validating the type compatibility node by node."""
 import ast
 from typing import Type
 
@@ -5,6 +6,8 @@ from typily.compatibility import Operation
 
 
 class Validator:
+    """Abstract class for validating a node."""
+
     def __new__(cls, node: ast.AST) -> "Validator":
         for child in Validator.__subclasses__():
             if isinstance(node, child.node_type):
@@ -27,12 +30,19 @@ class Validator:
 
 
 class ModuleValidator(Validator, node_type=ast.Module):
+    """Class for validating Module nodes"""
+
     def validate(self) -> None:
         for child in self.node.body:
             Validator(child).validate()
 
+    def get_type(self) -> Type:
+        pass
+
 
 class ConstantValidator(Validator, node_type=ast.Constant):
+    """Class for validating constant nodes."""
+
     def validate(self) -> None:
         pass
 
@@ -41,6 +51,8 @@ class ConstantValidator(Validator, node_type=ast.Constant):
 
 
 class ExpressionValidator(Validator, node_type=ast.Expr):
+    """Class for validating expression nodes."""
+
     def validate(self) -> None:
         Validator(self.node.value).validate()
 
@@ -49,6 +61,8 @@ class ExpressionValidator(Validator, node_type=ast.Expr):
 
 
 class BinOpValidator(Validator, node_type=ast.BinOp):
+    """Class for validating binary operation nodes."""
+
     def validate(self) -> None:
         pass
 
